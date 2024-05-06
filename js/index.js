@@ -80,9 +80,31 @@ const loadInitialCharacters = async() =>{
     const characters = await getCharactersFetch();
     createCharactersCards(characters);
 }
- 
 
 
+export const loadMoreCharacters = async()=>{
+    if(isLoading)return;
+    isLoading= true;
+
+    currentPage++;
+    const characters = await getCharactersFetch(currentPage);
+    if (characters.length > 0){
+        createCharactersCards(characters);
+    } else {
+        alert("No hay mas personajes por cargar");
+    }
+    isLoading = false;
+}
+window.onload = loadInitialCharacters;
+ window.addEventListener(`scroll`,()=>{
+    const{scrollTop, scrollHeight, clientHeight} = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 5 &&!isLoading){
+        loadMoreCharacters();
+    }
+})
+
+loadInitialCharacters();
 
 
 
